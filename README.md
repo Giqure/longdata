@@ -1,8 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Longdata
+
+This is a project to make labs online. Containing living and file management functions.
 
 ## Getting Started
 
-First, run the development server:
+First, git and run the development server:
+
+```bash
+git clone https://github.com/Giqure/longdata.git
+```
 
 ```bash
 npm run dev
@@ -16,21 +22,50 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Deploy on Server
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### create
 
-## Deploy on Vercel
+Project is created with `next.js` with app route.
+`Next.js` is based on `react`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project uses `next-auth` to implement signin function, `prisma` as ORM to connect `mySQL` and `tailwind` CSS.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Based on `TS`. Chinese.
+
+### structure
+
+Most function (`live` `feedback` and default page) shared the same layout in `(defaultRoot)`. Only `file` use a different layout. `Sign In` generally created by `Next-Auth`.
+
+Files managed by `file` is storaged in `app/data/file`.
+
+This project created in a enviroment which is called longdatd so its called longdata. It storaged in (Linux)`/www/`, so you can see if the absoulte path is used, it will be `/www/longdata/`.
+
+### function
+
+#### live
+
+Receive stream by rtmp://SERVERIP:1935/live, and show all streams in `/live`.
+
+Also a tutorial using OBS as example at `file/turtorial` (just spelling mistake).
+
+#### feedback
+
+Only one sentence.
+
+#### file
+
+Like a simple Explorer in windows, it manage files in certain dir. User can upload and delete files, make dirs.
+Some details of files are storaged and displayed, e.g. uploader, upload time, file size(not storaged).
+
+#### User
+
+This website project contains user management. User can sign up, sign in and out.
