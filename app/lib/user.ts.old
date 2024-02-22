@@ -1,0 +1,137 @@
+import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient()
+
+
+export default async function user(req: NextRequest) {
+    const res: Res = {
+        code: 500
+    };
+
+    let body: { user: User; method: any; };
+    if (req.body)
+        body = JSON.parse(req.body.toString());
+    else {
+        res.code = 400;
+        res.err = 'Invaild request'
+        return NextResponse.json(res)
+    }
+
+    const getUserById = async (id: number | undefined) => {
+        let user: User | null = {};
+        try {
+            user = await prisma.user.findUnique({
+                where: {
+                    id
+                }
+            });
+        } catch (NotFoundError) {
+            return null
+        }
+        return user;
+    }
+
+    const getUserByUsername = async (username: string | undefined) => {
+        let user: User | null = {};
+        try {
+            user = await prisma.user.findUnique({
+                where: {
+                    username
+                }
+            });
+        } catch (NotFoundError) {
+            return null
+        }
+        return user;
+    }
+
+    const checkPassword = async (user: User, password: string | undefined) => {
+        if (user.password == password) return user;
+        else return null;
+    };
+
+    if(body.method == "PUT") {
+        let user: User | null;
+        if (body.user) {
+        }
+        try {
+            user = await prisma.user.create({
+                data: body.user
+            })
+            if(user) {
+                res.code = 200;
+                res.user = user;
+            } else {
+                res.code = 500;
+                res.err = 'Unperdictable Error'
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        return NextResponse.json(res)
+    }
+
+    let user: User | null = await getUserById(body.user.id) || await getUserByUsername(body.user.username)
+    if (user) {
+        if (await checkPassword(user, body.user.password)) {
+            switch (body.method) {
+                case "GET":
+                    res.code = 200;
+                    res.user = user;
+                    break;
+                case "POST":
+                    try {
+                        user = await prisma.user.update({
+                            where: {
+                                id: user.id
+                            },
+                            data: body.user
+                        })
+                        if(user) {
+                            res.code = 200;
+                            res.user = user;
+                        } else {
+                            res.code = 500;
+                            res.err = 'Unperdictable Error'
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                    break;
+                case "DEL":
+                    try {
+                        user = await prisma.user.delete({
+                            where: {
+                                id: body.user.id
+                            }
+                        })
+                    } catch(err) {
+                        console.log(err);
+                    }
+                    if(user) {
+                        res.code = 200;
+                        res.user = user;
+                    } else {
+                        res.code = 500;
+                        res.err = 'Unperdictable Error'
+                    }
+                    break;
+                default:
+                    res.code = 400;
+                    res.err = 'Invaild request'
+                    return NextResponse.json(res)
+            }
+        }
+        else {
+            res.code = 403;
+            res.err = 'Wrong password'
+        }
+    } else {
+        res.code = 404;
+        res.err = 'Wrong ID or Username'
+    }
+
+    return NextResponse.json(res)
+}
