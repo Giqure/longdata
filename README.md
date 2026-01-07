@@ -1,3 +1,4 @@
+🛑⚠️ not packed with CVE-2025-55182 and nextjs vulnerabilities and exposures, it's score is 10.0, dangerous that anyone can control device through this project.
 # Longdata
 
 This is a project to make our labs online. Containing living and file management functions.
