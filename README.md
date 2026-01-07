@@ -1,6 +1,6 @@
 # Longdata
 
-This is a project to make labs online. Containing living and file management functions.
+This is a project to make our labs online. Containing living and file management functions.
 
 ## Getting Started
 
